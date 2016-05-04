@@ -2,7 +2,8 @@ package feeds
 
 import (
 	"encoding/xml"
-	"xl/xml/dom"
+
+	"github.com/bernard-xl/goto/xml/dom"
 )
 
 type Binding struct {
@@ -32,6 +33,5 @@ func innerDecode(f *Feed, d *dom.Document, b *Binding) error {
 			innerDecode(f, child, childBinding)
 		}
 	}
-
 	return nil
 }

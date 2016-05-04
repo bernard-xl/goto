@@ -3,8 +3,9 @@ package rss
 import (
 	"encoding/xml"
 	"time"
-	"xl/feeds"
-	"xl/xml/dom"
+
+	"github.com/bernard-xl/goto/feeds"
+	"github.com/bernard-xl/goto/xml/dom"
 )
 
 func item() *feeds.Binding {

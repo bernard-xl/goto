@@ -2,8 +2,9 @@ package rss
 
 import (
 	"encoding/xml"
-	"xl/feeds"
-	"xl/xml/dom"
+
+	"github.com/bernard-xl/goto/feeds"
+	"github.com/bernard-xl/goto/xml/dom"
 )
 
 func image() *feeds.Binding {
