@@ -16,7 +16,7 @@ type Document struct {
 	EnclosedText     string
 }
 
-func DecodeDocument(reader io.Reader) (*Document, error) {
+func BuildFromReader(reader io.Reader) (*Document, error) {
 	decoder := xml.NewDecoder(reader)
 	stack := make([]*Document, 0, 8)
 
@@ -70,7 +70,7 @@ func (self *Document) Find(name xml.Name) *Document {
 }
 
 func (self *Document) List(name xml.Name) []*Document {
-	result := make([]*Document, 8)
+	result := make([]*Document, 0, 8)
 	for _, untypedChild := range self.Children {
 		switch child := untypedChild.(type) {
 		case *Document:
@@ -82,7 +82,7 @@ func (self *Document) List(name xml.Name) []*Document {
 	return result
 }
 
-func (self *Document) Query(path ...xml.Name) *Document {
+func (self *Document) QueryOne(path ...xml.Name) *Document {
 	result := self
 
 	for len(path) != 0 {
@@ -90,6 +90,28 @@ func (self *Document) Query(path ...xml.Name) *Document {
 		path = path[1:]
 		if result == nil {
 			return nil
+		}
+	}
+	return result
+}
+
+func (self *Document) QueryMany(path ...xml.Name) []*Document {
+	if len(path) == 0 {
+		return nil
+	}
+
+	var result []*Document
+	target := path[0]
+	nextPath := path[1:]
+
+	for _, child := range self.EnclosedElements {
+		if child.Name == target {
+			if len(path) == 1 {
+				result = append(result, self)
+			} else {
+				subresult := child.QueryMany(nextPath...)
+				result = append(result, subresult...)
+			}
 		}
 	}
 	return result
